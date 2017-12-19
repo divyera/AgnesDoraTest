@@ -30,7 +30,7 @@ public class Working_PlaceOrderTest extends TestBase {
 	YourCartPage yourCartPage = new YourCartPage();
 	OrderCompletePage orderCompletePage = new OrderCompletePage();;
 	Reusable reusable = new Reusable();
-	TestUtil testUtil = new TestUtil(System.getProperty("user.dir")+ "\\testdata\\JustReleased.xlsx", "TestData");
+	TestUtil testUtil = new TestUtil(System.getProperty("user.dir")+ "\\testdata\\OrderProducts.xlsx", "TestData");
 
 	
 	@DataProvider
