@@ -2,6 +2,7 @@ package com.agnesdora.qa.testcases;
 
 import java.io.IOException;
 
+import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -19,7 +20,7 @@ import com.agnesdora.qa.pages.OrderCompletePage;
 import com.agnesdora.qa.pages.ShippingAddressPage;
 import com.agnesdora.qa.pages.YourCartPage;
 import com.agnesdora.qa.util.TestUtil;
-
+import com.relevantcodes.extentreports.LogStatus;
 
 
 public class Working_PlaceOrderTest extends TestBase {
@@ -42,10 +43,14 @@ public class Working_PlaceOrderTest extends TestBase {
 	@Test(dataProvider="getTestIdList")
 	public void orderProducts(String testCaseID) throws IOException {
 		TestBase.TESTCASE_ID = testCaseID;
+		HomePage.expectedProductTotal = 0;
 		logger = extent.startTest(testCaseID);
 		loginPage.loginUserToWeb(testUtil.getDataByTestCaseId(testCaseID, "userName"), 
 				testUtil.getDataByTestCaseId(testCaseID, "password"));
-		homePage.clickOnCategoryLink("Just Released");
+		
+		homePage.clickOnCategoryLink(testUtil.getDataByTestCaseId(testCaseID, "category"));
+//		homePage.emptyMyCart();
+//		homePage.clickOnCategoryLink(testUtil.getDataByTestCaseId(testCaseID, "category"));
 		
 		String[] arrPrd = testUtil.getDataByTestCaseId(testCaseID, "productInfo").split("\\|");
 		for (int i=0; i< arrPrd.length; i++){
@@ -67,9 +72,6 @@ public class Working_PlaceOrderTest extends TestBase {
 		
 		yourCartPage.clickOnPlaceOrder();
 		orderCompletePage.captureOrderInfo();
-		
-		extent.endTest(logger);
-
 	}
 
 	@BeforeTest
@@ -84,7 +86,14 @@ public class Working_PlaceOrderTest extends TestBase {
 	}
 	
 	@AfterMethod
-	public void tearDown(){
+	public void tearDown(ITestResult result){
+		if(ITestResult.FAILURE==result.getStatus()){
+			TestUtil.logScreenshotToReport();
+			if (result.getThrowable() != null) {
+				logger.log(LogStatus.FAIL, "Test Failed due to: " + (result.getThrowable()).toString());
+			}
+		}
+		extent.endTest(logger);
 		terminateBrowser();
 	}
 
