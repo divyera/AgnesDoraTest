@@ -99,5 +99,10 @@ public class PlaceOrderTest extends TestBase {
 		extent.flush();
 		extent.close();
 	}
+	
+	public void test()
+	{
+		
+	}
 
 }
